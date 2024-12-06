@@ -17,14 +17,12 @@ A macro that takes both cars into consideration.
 Combined with several automations and some helpers it is now possible to let Homeassistant look for the cheapest hours needed to charge both cars, while still keeping into account the scheduled completion time for each car separately.
 
 ### Helpers
-|---------------------------------------------|--------------|--------------------------------------------------|
 | Entity                                      | Type         | Description                                      |
 |---------------------------------------------|--------------|--------------------------------------------------|
 | car_1_base_charge_percentage_per_hour       | input_number | Percentage of battery "car 1" charges in an hour |
 | car_2_base_charge_percentage_per_hour       | input_number | Percentage of battery "car 2" charges in an hour |
 | car_1_calculated_charge_percentage_per_hour | input_number | New calculated charge percentage for "car 1"     |
 | car_2_calculated_charge_percentage_per_hour | input_number | New calculated charge percentage for "car 2"     |
-|---------------------------------------------|--------------|--------------------------------------------------|
 
 ### Automations
 
