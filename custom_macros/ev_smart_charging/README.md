@@ -37,3 +37,6 @@ It checks if the `ev_smart_charging_charging_speed` and `car_x_calculated_charge
 3. Reset CarX Calculated Charge Percentage
 Two automations, one for each car, that triggers when the car is Disconnected from the charging station.
 It resets the `ev_smart_charging_charging_speed` to the corresponding `car_x_base_charge_percentage_per_hour`, ready for when the car connects again and we can start the whole anew.
+
+## Liability Notice
+It works for me so far, but I take no responsibility for any negative consequences that might come from using this macro.
