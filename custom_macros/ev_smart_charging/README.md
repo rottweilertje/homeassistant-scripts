@@ -28,7 +28,7 @@ Combined with several automations and some helpers it is now possible to let Hom
 
 1. EV Smart Charging Calculate Charge Speed
 An automation that is triggered every time the `ev_smart_charging_charging` for each of the cars is updated.
-It calculates a new value for each car and stores it in the `car_x_calculated_charge_percentage_per_hour` helper.
+It calculates a new value for each car using the [calculate_new_charging_speed macro](./calculate_new_charging_speed.jinja) and stores it in the `car_x_calculated_charge_percentage_per_hour` helper.
 
 2. EV Smart Charging Update Charging Speed
 An automation that is triggered every time the `car_x_calculated_charge_percentage_per_hour` is updated.
