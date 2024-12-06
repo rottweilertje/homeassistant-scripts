@@ -1,0 +1,67 @@
+{% macro calculate_new_charging_speed(vehicle) %}
+
+{% set calculate_for = namespace(car=vehicle) %}
+{% set base_charge_speed_car_1 = states('input_number.car_1_base_charge_percentage_per_hour') | float %}  
+{% set base_charge_speed_car_2 = states('input_number.car_2_base_charge_percentage_per_hour') | float %}
+
+{%- set car_1 = namespace(charging_hours=[]) %}
+{%- set charging_car_1 = state_attr('sensor.ev_smart_charging_charging', 'charging_schedule') %}
+{%- for charging_hour in charging_car_1 %}
+  {%- if charging_hour['value'] > 0 %}
+    {%- set car_1.charging_hours = car_1.charging_hours + [charging_hour['start']] %}    
+  {%- endif %}
+{%- endfor %}
+
+{%- set car_2 = namespace(charging_hours=[]) %}
+{%- set charging_car_2 = state_attr('sensor.ev_smart_charging_charging_2', 'charging_schedule') %}
+{%- for charging_hour in charging_car_1 %}
+  {%- if charging_hour['value'] > 0 %}
+    {%- set car_2.charging_hours = car_2.charging_hours + [charging_hour['start']] %}    
+  {%- endif %}
+{%- endfor %}
+
+{% set count = namespace(value=0) %}
+
+{%- for car_1_hour in car_1.charging_hours %}
+  {%- for car_2_hour in car_2.charging_hours %}
+    {# car_1 : {{ car_1_hour }} #}
+    {# car_2 : {{ car_2_hour }} #}
+    {%- if car_1_hour == car_2_hour %}
+      {%- set count.value = count.value + 1 %}
+    {# equal {{ count.value }} #}
+    {%- endif %}
+  {% endfor %}
+{%- endfor %}
+
+{# car_1 base charge speed : {{ base_charge_speed_car_1 | float }}%/h   #}
+{# car_2 base charge speed : {{ base_charge_speed_car_2 | float }}%/h #}
+
+{% set charge_degredation_factor = 0.5 | float %}
+{# Charge degredation : {{charge_degredation_factor}} #}
+
+{# car_1 calculated charging hours: {{ car_1.charging_hours|length }}h #}
+{# car_2 calculated charging hours: {{ car_2.charging_hours|length }}h #}
+
+{# Count overlapping hours: {{ count.value }}h #}
+
+{%- set car_1_factor = ( count.value / car_1.charging_hours|length ) %}
+{%- set car_2_factor = ( count.value / car_2.charging_hours|length ) %}
+
+{# car_1 percentage of overlapping hours : {{ car_1_factor * 100 }} #}
+{# car_2 percentage of overlapping hours : {{ car_2_factor * 100 }} #}
+
+{%- set car_1_speed =  ( base_charge_speed_car_1 * (1 - car_1_factor )) + ( ( base_charge_speed_car_1 * charge_degredation_factor ) * car_1_factor ) %}
+{%- set car_2_speed =  ( base_charge_speed_car_2 * (1 - car_2_factor )) + ( ( base_charge_speed_car_2 * charge_degredation_factor ) * car_2_factor ) %}
+
+{# car_1 newly calculated charge speed : {{ '%0.2f' % car_1_speed | float }}%/h #}
+{# car_2 newly calculated charge speed : {{ '%0.2f' % car_2_speed | float }}%/h #}
+
+
+{# --- result #}
+{%- if calculate_for.car == 1 %}
+  {{ '%0.1f' % car_1_speed | float }}
+{%- elif calculate_for.car == 2 %}
+  {{ '%0.1f' % car_2_speed | float }}
+{%- endif %}
+
+{% endmacro %}
