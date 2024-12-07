@@ -14,7 +14,7 @@
 
 {%- set car_2 = namespace(charging_hours=[]) %}
 {%- set charging_car_2 = state_attr('sensor.ev_smart_charging_charging_2', 'charging_schedule') %}
-{%- for charging_hour in charging_car_1 %}
+{%- for charging_hour in charging_car_2 %}
   {%- if charging_hour['value'] > 0 %}
     {%- set car_2.charging_hours = car_2.charging_hours + [charging_hour['start']] %}    
   {%- endif %}
@@ -43,9 +43,17 @@
 {# car_2 calculated charging hours: {{ car_2.charging_hours|length }}h #}
 
 {# Count overlapping hours: {{ count.value }}h #}
+{%- if car_1.charging_hours|length == 0 %}
+  {%- set car_1_factor = 1 %}
+{%- else %}
+  {%- set car_1_factor = ( count.value / car_1.charging_hours|length ) %}
+{%- endif %}
 
-{%- set car_1_factor = ( count.value / car_1.charging_hours|length ) %}
-{%- set car_2_factor = ( count.value / car_2.charging_hours|length ) %}
+{%- if car_2.charging_hours|length == 0 %}
+  {%- set car_2_factor = 1 %}
+{%- else %}
+  {%- set car_2_factor = ( count.value / car_2.charging_hours|length ) %}
+{%- endif %}
 
 {# car_1 percentage of overlapping hours : {{ car_1_factor * 100 }} #}
 {# car_2 percentage of overlapping hours : {{ car_2_factor * 100 }} #}
