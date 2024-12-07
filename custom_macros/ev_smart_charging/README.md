@@ -1,5 +1,7 @@
 # Calculate Charging Speed
 
+v.0.0.2
+
 ## The Problem
 There are solutions to charging your car on the cheapest hours of the day when you have a dynamic energy contract.
 
