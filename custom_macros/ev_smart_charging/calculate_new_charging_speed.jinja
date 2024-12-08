@@ -1,6 +1,6 @@
 {% macro calculate_new_charging_speed(vehicle) %}
 
-{%- version 0.0.3 %}
+{# version 0.0.3 #}
 
 {% set calculate_for = namespace(car=vehicle) %}
 {% set base_charge_speed_car_1 = states('input_number.car_1_base_charge_percentage_per_hour') | float %}  
