@@ -1,6 +1,6 @@
 {% macro calculate_new_charging_speed(vehicle) %}
 
-{%- version 0.0.2 %}
+{%- version 0.0.3 %}
 
 {% set calculate_for = namespace(car=vehicle) %}
 {% set base_charge_speed_car_1 = states('input_number.car_1_base_charge_percentage_per_hour') | float %}  
@@ -46,13 +46,13 @@
 
 {# Count overlapping hours: {{ count.value }}h #}
 {%- if car_1.charging_hours|length == 0 %}
-  {%- set car_1_factor = 1 %}
+  {%- set car_1_factor = 0 %}
 {%- else %}
   {%- set car_1_factor = ( count.value / car_1.charging_hours|length ) %}
 {%- endif %}
 
 {%- if car_2.charging_hours|length == 0 %}
-  {%- set car_2_factor = 1 %}
+  {%- set car_2_factor = 0 %}
 {%- else %}
   {%- set car_2_factor = ( count.value / car_2.charging_hours|length ) %}
 {%- endif %}
